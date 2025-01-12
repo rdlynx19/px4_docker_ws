@@ -4,17 +4,19 @@ FROM kaspergrontved/px4:v1.14
 
 # ** [Optional] Uncomment this section to install additional packages. **
 #
-# ENV DEBIAN_FRONTEND=noninteractive
-# RUN apt-get update \
-#    && apt-get -y install --no-install-recommends <your-package-list-here> \
+ENV DEBIAN_FRONTEND=noninteractive
+RUN apt-get update \
+   && apt-get -y install --no-install-recommends ros-humble-ros-gzharmonic \
 #    #
 #    # Clean up
-#    && apt-get autoremove -y \
-#    && apt-get clean -y \
-#    && rm -rf /var/lib/apt/lists/*
-# ENV DEBIAN_FRONTEND=dialog
+   && apt-get autoremove -y \
+   && apt-get clean -y \
+   && rm -rf /var/lib/apt/lists/*
+ENV DEBIAN_FRONTEND=dialog
 
 # Add an environment variable for the workspace
 ARG WORKSPACE
 RUN echo "if [ -f ${WORKSPACE}/install/setup.bash ]; then source ${WORKSPACE}/install/setup.bash; fi" >> /home/ros/.bashrc
 RUN echo "source /home/ros/ws_sensor_combined/install/setup.bash" >> /home/ros/.bashrc
+
+RUN /bin/bash -c "sudo chown -R ros:ros /home/ros/PX4-Autopilot"
